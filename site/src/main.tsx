@@ -31,10 +31,14 @@ const devRoutes = [
     children: [
       {
         index: true,
-        element: <Navigate to="/meskerem/1" replace />,
+        element: isDev ? (
+          <Navigate to="/meskerem/1" replace />
+        ) : (
+          <Navigate to="/?week=meskerem&day=1" replace />
+        ),
       },
       {
-        path: ":week/:day",
+        path: "/:week/:day",
         element: <Editor />,
         loader: dataLoader,
         action: updateAction,
