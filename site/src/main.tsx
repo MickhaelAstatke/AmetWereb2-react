@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import RootLayout from "./components/RootLayout.tsx";
 import "./index.css";
 import "./assets/AbyssinicaSIL-Regular.ttf";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import Editor, {
   loader as dataLoader,
   action as updateAction,
@@ -24,14 +24,17 @@ try {
 
 // console.log("prod", prod);
 // console.log("isDev", isDev);
-const router = createBrowserRouter([
-  { path: "*", element: isDev ? <NotFound /> : <App /> },
+const devRoutes = [
   {
     path: "/",
-    element: isDev ? <RootLayout /> : <App />,
+    element: <RootLayout />,
     children: [
       {
-        path: "/:week/:day",
+        index: true,
+        element: <Navigate to="/meskerem/1" replace />,
+      },
+      {
+        path: ":week/:day",
         element: <Editor />,
         loader: dataLoader,
         action: updateAction,
@@ -46,9 +49,21 @@ const router = createBrowserRouter([
           },
         ],
       },
+      { path: "*", element: <NotFound /> },
     ],
   },
-]);
+];
+
+const prodRoutes = [
+  {
+    path: "/:week/:day/:highlight?",
+    element: <App />,
+  },
+  { path: "/", element: <App /> },
+  { path: "*", element: <NotFound /> },
+];
+
+const router = createBrowserRouter(isDev ? devRoutes : prodRoutes);
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <RouterProvider router={router} />
