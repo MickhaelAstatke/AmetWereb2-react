@@ -24,11 +24,10 @@ try {
 
 // console.log("prod", prod);
 // console.log("isDev", isDev);
-const router = createBrowserRouter([
-  { path: "*", element: isDev ? <NotFound /> : <App /> },
+const devRoutes = [
   {
     path: "/",
-    element: isDev ? <RootLayout /> : <App />,
+    element: <RootLayout />,
     children: [
       {
         index: true,
@@ -54,9 +53,21 @@ const router = createBrowserRouter([
           },
         ],
       },
+      { path: "*", element: <NotFound /> },
     ],
   },
-]);
+];
+
+const prodRoutes = [
+  {
+    path: "/:week/:day/:highlight?",
+    element: <App />,
+  },
+  { path: "/", element: <App /> },
+  { path: "*", element: <NotFound /> },
+];
+
+const router = createBrowserRouter(isDev ? devRoutes : prodRoutes);
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <RouterProvider router={router} />
