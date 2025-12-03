@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import RootLayout from "./components/RootLayout.tsx";
 import "./index.css";
 import "./assets/AbyssinicaSIL-Regular.ttf";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import Editor, {
   loader as dataLoader,
   action as updateAction,
@@ -30,6 +30,14 @@ const router = createBrowserRouter([
     path: "/",
     element: isDev ? <RootLayout /> : <App />,
     children: [
+      {
+        index: true,
+        element: isDev ? (
+          <Navigate to="/meskerem/1" replace />
+        ) : (
+          <Navigate to="/?week=meskerem&day=1" replace />
+        ),
+      },
       {
         path: "/:week/:day",
         element: <Editor />,
