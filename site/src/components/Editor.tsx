@@ -195,42 +195,12 @@ function Editor() {
               <p key={index + "p"} className={styles.paragraph}>
                 {element[index]}
               </p>
-              {item.paul ? (
-                <p key={index + "dn"} className={styles.readings}>
-                  ዲ.ን.: {item.paul}
-                </p>
-              ) : (
-                ""
-              )}
-
-              {item.meliekt ? (
-                <p key={index + "2nddn"} className={styles.readings}>
-                  ንፍቅ ዲ.ን.: {item.meliekt}
-                </p>
-              ) : (
-                ""
-              )}
-              {item.gh ? (
-                <p key={index + "2ndpr"} className={styles.readings}>
-                  ንፍቅ ካህን: {item.gh}
-                </p>
-              ) : (
-                ""
-              )}
-              <p key={index + "wengel"} className={styles.readings}>
-                ወንጌል: {item.wengel}
-              </p>
-              {item.kidase ? (
-                <p key={index + "kidase"} className={styles.readings}>
-                  ቅዳሴ: {item.kidase}
-                </p>
-              ) : (
-                ""
-              )}
-
+              
+              <br />
               <br />
               <br />
             </div>
+              
           );
         })}
         <br />
@@ -250,24 +220,17 @@ function Editor() {
 export default Editor;
 
 export async function loader({ params }) {
-  const data = await import(`../data/${params.week}/${params.day}.json`);
-
-  const res = await fetch(
-    `http://localhost:8080/data/${params.week}/${params.day}.sign.json`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    }
+  const dataModule = await import(
+    `../data/${params.week}/${params.day}.json`
   );
-  const signData = await res.json();
+  const signModule = await import(
+    `../data/${params.week}/${params.day}.sign.json`
+  );
 
-  //TODO: toggle the return statements for production
-  return { sign: signData, data: data.default }; //dev
-
-  // const sign = await import(`../data/${params.week}/${params.day}.sign.json`);
-  // return { sign: sign.default, data: data.default }; //prod
+  return {
+    sign: signModule.default,
+    data: dataModule.default,
+  };
 }
 
 export async function action({ request, params }) {
